@@ -25,18 +25,21 @@
 
     </header>
     <main>
-        <div id="content" class="container p-2"></div>
-            <div class="modal bg-secondary opacity-50" id="modal_aguardar" data-bs-backdrop="static"
-                data-bs-keyboard="false" tabindex="-1" aria-hidden="true">
-                <div class="modal-dialog modal-dialog-centered d-flex justify-content-center">
-                    <div class="text-center">
-                        <div class="spinner-border text-light" role="status">
-                            <span class="visually-hidden">Aguarde...</span>
-                        </div>
-                        <h5 class="text-light">Aguarde...</h5>
+        <div id="wrapper">
+            <div id="content" class="container p-2"></div>
+        </div>
+        <!-- MODAL -->
+        <div class="modal bg-secondary opacity-50" id="modal_aguardar" data-bs-backdrop="static"
+            data-bs-keyboard="false" tabindex="-1" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered d-flex justify-content-center">
+                <div class="text-center">
+                    <div class="spinner-border text-light" role="status">
+                        <span class="visually-hidden">Aguarde...</span>
                     </div>
+                    <h5 class="text-light">Aguarde...</h5>
                 </div>
             </div>
+        </div>
         </div>
         <!-- jQuery include -->
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
