@@ -1,30 +1,42 @@
-var contImg = 0;
-var listImg = {};
-var boolPhotos = false;
 // import loadPostsHtml from './module/posts.js';
-$('#sl_opt').change(() => {
-    $('#content').empty();
-    switch ($('#sl_opt').val()) {
-        case 'posts':
-            $('#modal_aguardar').show();
-            boolPhotos = false;
-            loadPosts();
-            break;
-        case 'comments':
-            $('#modal_aguardar').show();
-            boolPhotos = false;
-            loadComments();
-            break;
-        case 'photos':
-            $('#modal_aguardar').show();
-            boolPhotos = true;
-            loadPhotos();
-            break;
-        default:
-            $('#content').empty();
-            break;
-    }
-});
+$(document).ready(() => {
+    let contImg = 0;
+    let listImg = {};
+    let boolPhotos = false;
+    $('#sl_opt').change(() => {
+        $('#content').empty();
+        switch ($('#sl_opt').val()) {
+            case 'posts':
+                $('#modal_aguardar').show();
+                boolPhotos = false;
+                loadPosts();
+                break;
+            case 'comments':
+                $('#modal_aguardar').show();
+                boolPhotos = false;
+                loadComments();
+                break;
+            case 'photos':
+                $('#modal_aguardar').show();
+                boolPhotos = true;
+                const photos = sendRequestPhotos();
+                photos.then((data) => {
+                    $('#modal_aguardar').hide();
+                    listImg = data;
+                    contImg = listPhotos(data, $('#content'), 0);
+                })
+                break;
+            default:
+                $('#content').empty();
+                break;
+        }
+    });
+    window.addEventListener('scroll', () => {
+        if ((window.scrollY + window.innerHeight >= document.documentElement.scrollHeight) && boolPhotos === true)
+        contImg = listPhotos(listImg, $('#content'), contImg);
+    })
+})
+
 // REQUEST TO PLACEHOLDER
 function sendRequestPosts() {
     const url = 'https://jsonplaceholder.typicode.com/posts';
@@ -38,7 +50,6 @@ function sendRequestPhotos() {
     const url = 'https://jsonplaceholder.typicode.com/photos';
     return $.getJSON(url);
 }
-
 // ============================================================
 function loadPosts() {
     const post = sendRequestPosts();
@@ -55,15 +66,15 @@ function loadComments() {
     })
 
 }
-function loadPhotos() {
-    const photos = sendRequestPhotos();
-    photos.then((data) => {
-        $('#modal_aguardar').hide();
-        listImg = data;
-        contImg = listPhotos(data, $('#content'), 0);
-    })
+// function loadPhotos() {
+//     const photos = sendRequestPhotos();
+//     photos.then((data) => {
+//         $('#modal_aguardar').hide();
+//         listImg = data;
+//         contImg = listPhotos(data, $('#content'), 0);
+//     })
 
-}
+// }
 // ============================================================
 function listPosts(listPost, idContent) {
     for (let postAtual of listPost) {
@@ -113,7 +124,3 @@ function listPhotos(listPhotos, idContent, positionInitial) {
     }
     return contA;
 }
-window.addEventListener('scroll',()=>{
-    if((window.scrollY + window.innerHeight >= document.documentElement.scrollHeight) && boolPhotos === true)
-        listPhotos(listImg,$('#content'),contImg);
-})
