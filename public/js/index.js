@@ -1,24 +1,29 @@
+var contImg = 0;
+var listImg = {};
+var boolPhotos = false;
 // import loadPostsHtml from './module/posts.js';
 $('#sl_opt').change(() => {
     $('#content').empty();
     switch ($('#sl_opt').val()) {
         case 'posts':
             $('#modal_aguardar').show();
+            boolPhotos = false;
             loadPosts();
             break;
         case 'comments':
             $('#modal_aguardar').show();
+            boolPhotos = false;
             loadComments();
             break;
         case 'photos':
             $('#modal_aguardar').show();
+            boolPhotos = true;
             loadPhotos();
             break;
         default:
             $('#content').empty();
             break;
     }
-
 });
 // REQUEST TO PLACEHOLDER
 function sendRequestPosts() {
@@ -54,8 +59,10 @@ function loadPhotos() {
     const photos = sendRequestPhotos();
     photos.then((data) => {
         $('#modal_aguardar').hide();
-        listPhotos(data, $('#content'), 0);
+        listImg = data;
+        contImg = listPhotos(data, $('#content'), 0);
     })
+
 }
 // ============================================================
 function listPosts(listPost, idContent) {
@@ -90,7 +97,7 @@ function listPhotos(listPhotos, idContent, positionInitial) {
     //for(let photoAtual of listPhotos){
     let contA = positionInitial;
     let contB = contA;
-    for (let i = 0; i < 10; i++) {
+    for (let i = 0; i < 25; i++) {
         const divRow = document.createElement('div');
         $(divRow).attr('class', 'row');
         contB = contA;
@@ -102,8 +109,11 @@ function listPhotos(listPhotos, idContent, positionInitial) {
             `).appendTo(divRow);
             contA = z + 1;
         }
-        console.log(contA + '  ' + contB);
         $(divRow).appendTo(idContent);
     }
     return contA;
 }
+window.addEventListener('scroll',()=>{
+    if((window.scrollY + window.innerHeight >= document.documentElement.scrollHeight) && boolPhotos === true)
+        listPhotos(listImg,$('#content'),contImg);
+})
