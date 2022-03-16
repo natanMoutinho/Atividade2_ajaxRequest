@@ -1,6 +1,5 @@
 // import loadPostsHtml from './module/posts.js';
 $(document).ready(() => {
-    let contImg = 0;
     let listImg = {};
     let boolPhotos = false;
     $('#sl_opt').change(() => {
@@ -9,12 +8,20 @@ $(document).ready(() => {
             case 'posts':
                 $('#modal_aguardar').show();
                 boolPhotos = false;
-                loadPosts();
+                const post = sendRequestPosts();
+                post.then((data) => {
+                    $('#modal_aguardar').hide();
+                    listPosts(data, $('#content'));
+                })
                 break;
             case 'comments':
                 $('#modal_aguardar').show();
                 boolPhotos = false;
-                loadComments();
+                const comments = sendRequestComments();
+                comments.then((data) => {
+                    $('#modal_aguardar').hide();
+                    listComments(data, $('#content'));
+                })
                 break;
             case 'photos':
                 $('#modal_aguardar').show();
@@ -23,7 +30,8 @@ $(document).ready(() => {
                 photos.then((data) => {
                     $('#modal_aguardar').hide();
                     listImg = data;
-                    contImg = listPhotos(data, $('#content'), 0);
+                    listPhotos(listImg.splice(0, 100), $('#content'));
+                    console.log(typeof listImg);
                 })
                 break;
             default:
@@ -33,7 +41,7 @@ $(document).ready(() => {
     });
     window.addEventListener('scroll', () => {
         if ((window.scrollY + window.innerHeight >= document.documentElement.scrollHeight) && boolPhotos === true)
-        contImg = listPhotos(listImg, $('#content'), contImg);
+            listPhotos(listImg.splice(0, 100), $('#content'));
     })
 })
 
@@ -50,31 +58,6 @@ function sendRequestPhotos() {
     const url = 'https://jsonplaceholder.typicode.com/photos';
     return $.getJSON(url);
 }
-// ============================================================
-function loadPosts() {
-    const post = sendRequestPosts();
-    post.then((data) => {
-        $('#modal_aguardar').hide();
-        listPosts(data, $('#content'));
-    })
-}
-function loadComments() {
-    const comments = sendRequestComments();
-    comments.then((data) => {
-        $('#modal_aguardar').hide();
-        listComments(data, $('#content'));
-    })
-
-}
-// function loadPhotos() {
-//     const photos = sendRequestPhotos();
-//     photos.then((data) => {
-//         $('#modal_aguardar').hide();
-//         listImg = data;
-//         contImg = listPhotos(data, $('#content'), 0);
-//     })
-
-// }
 // ============================================================
 function listPosts(listPost, idContent) {
     for (let postAtual of listPost) {
@@ -104,23 +87,18 @@ function listComments(listComments, idContent) {
         `).appendTo(idContent);
     }
 }
-function listPhotos(listPhotos, idContent, positionInitial) {
-    //for(let photoAtual of listPhotos){
-    let contA = positionInitial;
-    let contB = contA;
-    for (let i = 0; i < 25; i++) {
-        const divRow = document.createElement('div');
-        $(divRow).attr('class', 'row');
-        contB = contA;
-        for (let z = contA; z < contB + 4; z++) {
-            $(` 
-                <div class="col">
-                    <img src="${listPhotos[z].url}" class="img-thumbnail rounded" >
+function listPhotos(listPhotos, idContent) {
+    let idDivList = "divListPhoto"
+    $(`
+        <div  id="${idDivList}" class="row row-cols-1 row-cols-sm-2 row-cols-md-3  row-cols-md-4 g-4">
+    `).appendTo(idContent);
+    for (let photo of listPhotos) {
+        $(`
+            <div class="col">
+               <div class="card shadow-sm">
+                        <img src="${photo.thumbnailUrl}">
                 </div>
-            `).appendTo(divRow);
-            contA = z + 1;
-        }
-        $(divRow).appendTo(idContent);
+            </div>
+        `).appendTo('#' + idDivList);
     }
-    return contA;
 }
