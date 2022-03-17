@@ -76,11 +76,21 @@ function listComments(listComments, idContent) {
         $(`
             <div class="card mb-2" style="width: 100%">
                 <div class="card-body">
-                    <div class="col">   
-                        <img src="./public/img/generic_avatar.jpg" alt="">
-                        <h5 class="card-title">${commentsAtual.title}</h5>
+                    <div class="col">
+                        <div class="d-flex ">   
+                            <img class="avatarImg ml-1" src="./public/img/generic_avatar.jpg" alt="">
+                            <h5 class="titleComent card-title">${commentsAtual.name}</h5>
+                        </div>
                     </div>
                     <p class="card-text"> ${commentsAtual.body}</p>
+                    <div >
+                        <img class="emailIcon"src="./public/img/email_icon.png" alt="">
+                        <a class="emailStyle"href="${commentsAtual.email}"> ${commentsAtual.email}</a>
+                        <img class="likeDeslikeIcons" src="./public/img/like_icon.png" alt="">
+                        <text>0</text>
+                        <img class="likeDeslikeIcons" src="./public/img/dislike_icon.png" alt="">
+                        <text>0</text>
+                    </div>
 
                 </div>
             </div>
