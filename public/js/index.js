@@ -31,7 +31,8 @@ $(document).ready(() => {
                     $('#modal_aguardar').hide();
                     listImg = data;
                     listPhotos(listImg.splice(0, 100), $('#content'));
-                    console.log(typeof listImg);
+                    //imgListener();
+                    // console.log(typeof listImg);
                 })
                 break;
             default:
@@ -43,6 +44,7 @@ $(document).ready(() => {
         if ((window.scrollY + window.innerHeight >= document.documentElement.scrollHeight) && boolPhotos === true)
             listPhotos(listImg.splice(0, 100), $('#content'));
     })
+    
 })
 
 // REQUEST TO PLACEHOLDER
@@ -105,10 +107,82 @@ function listPhotos(listPhotos, idContent) {
     for (let photo of listPhotos) {
         $(`
             <div class="col">
-               <div class="card shadow-sm">
+                <a data-bs-toggle="modal" data-bs-target="#modalImg${photo.id}">
+                    <div class="card shadow-sm btnImgModal">
                         <img src="${photo.thumbnailUrl}">
+                            <!--
+                            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalImg${photo.id}">
+                            Launch static backdrop modal
+                            </button>
+                            <img id="imgReal" src="${photo.url}" hidden>
+                            <p id="imgTitle"class="modal-title" hidden>${photo.title}</p> 
+                            
+                            --!>
+                    </div>
+                </a>
+                <!-- Modal -->
+                <div id="modalImg${photo.id}" class="modal fade  opacity-100" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+                    aria-labelledby="staticBackdropLabel" aria-hidden="true">
+                    <div class="modal-dialog">
+                        <div id="modalContent" class="modal-content">
+                            <div id="modalImgHeader"  class="modal-header">
+                                <p class="modal-title">${photo.title}</p> 
+                                <button onclick="(this)=>{this.hide();} "type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <div  id="modalImgBody"  class="modal-body">
+                                <div class="card shadow-sm btnImgModal">
+                                    <img id="imgReal" src="${photo.url}">  
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         `).appendTo('#' + idDivList);
+        console.log(photo);
     }
 }
+
+// function imgListener() {
+//     let imgs = document.getElementsByClassName('btnImgModal');
+//     //let imgs = $('.btnImgModal');
+//     for (let i = 0; i < imgs.length; i++) {
+//         imgs[i].addEventListener('click', function () {
+//             const childImg = this.querySelector('#imgReal').getAttribute('src');
+//             const childTitle = $(this).children('#imgTitle')[0]['innerText'];
+//             showModalImg(childTitle,childImg);
+//             //$('#modalImg').show();
+//             $('#modalImg').show();
+//             //console.log(childImg.getAttribute('src'));
+//             // if(this.children[0].getAttribute('id') == "imgReal")
+//             //     console.log(this);
+//         });
+//     }
+// }
+// function showModalImg(imgTitle,imgUrl){
+//     let modalContent = $('#modalContent');
+//     console.log(modalContent);
+//     //let imgHeader = modal.querySelector('#modalImgHeader');
+//     let imgHeader = $(modalContent).children('#modalImgHeader');
+//     let imgBody = $(modalContent).children('#modalImgBody');
+//     //console.log(imgHeader);
+//     //console.log(imgBody);
+//     // let imgBody = modal.querySelector('#modalImgBody');
+//     //$('#modalImgHeader').remove('<img>');
+//     imgHeader.empty();
+//     imgBody.empty();
+//     $(`
+//         <p class="modal-title">${imgTitle}</p> 
+//         <button type="button" class="btn-close" data-bs-dismiss="#modalImg" aria-label="Close"></button>
+//     `).appendTo(imgHeader);
+//     $(`
+//         <div class="card shadow-sm btnImgModal">
+//             <img id="imgReal" src="${imgUrl}">  
+//         </div>
+//     `).appendTo(imgBody);
+//     $(modalContent).focus();
+//     //$(modal).show();
+//     // $(modal).modal({
+//     //     show: true
+//     // })
+// }
